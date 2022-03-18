@@ -6,10 +6,11 @@ import { BookTypes } from "../types";
 import styles from "./Book.module.css"
 
 interface BookProps extends BookTypes{
-
+    deleteBook: (bookId:number) =>void
 }
 
-const Book:React.FC<BookProps> = ({bookId, title, author, createdAt, url}) => (
+const Book:React.FC<BookProps> = ({bookId, title, author, createdAt, url,deleteBook}) => {
+    return(
     <div className={styles.book}>
         <div className={styles.title}>
             <Link to={`/book/${bookId}`} className={styles.link_detail_title} >
@@ -32,11 +33,14 @@ const Book:React.FC<BookProps> = ({bookId, title, author, createdAt, url}) => (
                     <Button size="small"  shape="circle" icon={<EditOutlined />}  className={styles.button_edit}/>
                 </Tooltip>
                 <Tooltip title="Delete" >
-                    <Button size="small" type="primary" shape="circle" danger icon={<DeleteOutlined />} className={styles.button_delete}/>
+                    <Button size="small" type="primary" shape="circle" danger icon={<DeleteOutlined />} className={styles.button_delete} onClick={clickDelete} />
                 </Tooltip>
             </div>
         
     </div>
 )
-
+function clickDelete() {
+    deleteBook(bookId)
+}
+}
 export default Book

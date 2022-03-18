@@ -1,18 +1,20 @@
 import { ForkOutlined } from "@ant-design/icons"
-import { Button, Input, InputRef, PageHeader } from "antd"
+import { Button, Input, PageHeader, message as messageDialog } from "antd"
 import TextArea from "antd/lib/input/TextArea"
 import Layout from "./Layout"
 import styles from "./Add.module.css"
 import {useRef} from "react";
 import TextAreaType from "rc-textarea"
+import { BookReqType } from "../types"
 
 interface AddProps{
     loding : boolean;
     back : () => void;
     logout : () => void;
+    add: (book: BookReqType) => void
 }
 
-const Add: React.FC<AddProps> = ({loding, back, logout}) => {
+const Add: React.FC<AddProps> = ({loding, back, logout,add}) => {
 
     const titleRef= useRef<Input>(null);
     const messageRef= useRef<TextAreaType>(null);
@@ -77,6 +79,20 @@ const Add: React.FC<AddProps> = ({loding, back, logout}) => {
     </Layout>
     function click() {
         const title = titleRef.current!.state.value;
+        const message = messageRef.current!.resizableTextArea.props.value as string;
+        const author = authorRef.current!.state.value;
+        const url = urlRef.current!.state.value;
+
+        if(title === undefined || message === undefined || author === undefined || url === undefined ){
+            messageDialog.error("모든 빈칸을 채우세요")
+            return;
+        }
+        add({
+            title,
+            message,
+            author,
+            url
+        })
     }
 }
 

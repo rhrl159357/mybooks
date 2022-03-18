@@ -1,8 +1,10 @@
+import { push } from "connected-react-router";
 import { error } from "console";
+import { Action } from "redux";
 import { createActions, handleActions } from "redux-actions";
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import BookService from "../../services/BookService";
-import { BooksState, BookTypes } from "../../types";
+import { BookReqType, BooksState, BookTypes } from "../../types";
 
 
 
@@ -29,7 +31,7 @@ export default reducer
 
 //saga
 
-export const {getbooks} = createActions("GET_BOOKS",{
+export const {getbooks, addBook, deleteBook} = createActions("GET_BOOKS","ADD_BOOK","DELETE_BOOK",{
     prefix 
 })
 
@@ -43,7 +45,33 @@ function* getBooksSaga(){
         yield put(fail(new Error("Unknown error"  )))
     }
 }
+function* AddBookSaga(action: Action<BookReqType>){
+    try {
+        yield put(pending())
+        const token: string = yield select(state => state.auth.token)
+        const book:BookTypes = yield call((BookService.addBook, token, action.payload))
+        const books:BookTypes[] = yield select((state => state.books.books))
+        yield put(success({...books, book}))
+        yield put(push("/"))
+    } catch (e) {
+        yield put(fail(e))
+    }
+}
+function* DeleteBookSaga(action: Action<number>){
+    try {
+        const bookId = action.payload
+        yield put(pending());
+        const token:string = yield select(state=> state.auth.token)
+        yield call(BookService.deleteBook,token,bookId)
+        const books:BookTypes[] = yield select(state=>state.books.books)
+        yield put(success(books.filter(book => book.bookId !== bookId)))
+    } catch (e) {
+        yield put(fail(e))
+    }
+}
 
 export function* booksSaga(){
     yield takeLatest(`${prefix}/GET_BOOKS`,getBooksSaga)
+    yield takeEvery(`${prefix}/ADD_BOOK`,AddBookSaga)
+    yield takeEvery(`${prefix}/DELETE_BOOK`,DeleteBookSaga)
 }

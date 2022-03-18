@@ -12,9 +12,10 @@ interface ListProps{
     //error : Error| null;
     //logout: () => void;
     goAdd: () => void;
+    deleteBook: (bookId:number) =>void
 }
 
-const List:React.FC<ListProps> = ({books, loading , goAdd,
+const List:React.FC<ListProps> = ({books, loading , goAdd, deleteBook,
     //getBooks,
     //error,
     //logout,
@@ -60,7 +61,7 @@ const List:React.FC<ListProps> = ({books, loading , goAdd,
                 title:"Book",
                 dataIndex:"Book",
                 key:"book",
-                render:(text, record) => <Book author="" bookId={1} title="23" createdAt=""  url=""/>,
+                render:(text, record) => <Book author="" bookId={1} title="23" createdAt=""  url="" deleteBook={deleteBook}/>,
             },
         ]} 
             loading={books === null || loading}
