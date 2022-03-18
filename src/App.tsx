@@ -9,19 +9,19 @@ import Edit from './pages/Edit';
 import Error from './pages/Error';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
-import Signin from './pages/Signin';
+// import Signin from './pages/Signin';
 
 function App() {
   return (
     <ErrorBoundary FallbackComponent={Error }>
       {/* 호환의 문제로  ConnectedRouter가 작동이 안된다.*/}
-      <ConnectedRouter history={history}>
-        {/* <BrowserRouter> */}
+      {/* <ConnectedRouter history={history}> */}
+        <BrowserRouter>
           <Routes>
             {/* 메인 페이지 */}
             <Route path='/' element={<Home />}/>            
             {/* 로그인 페이지 */}
-            <Route path='/signin' element={<Signin />}/>
+            {/* <Route path='/signin' element={<Signin />}/> */}
             {/* 책장 만들기 */}
             <Route path='/add' element={<Add />}/>
             {/* 책장 세부정보 */}
@@ -31,8 +31,8 @@ function App() {
             {/* 잘못된 페이지 */}
             <Route path='*' element={<NotFound />}/>
           </Routes>
-        {/* </BrowserRouter> */}
-      </ConnectedRouter>
+        </BrowserRouter>
+      {/* </ConnectedRouter> */}
     </ErrorBoundary>
   );
 }

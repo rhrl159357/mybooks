@@ -61,8 +61,6 @@ function* logoutSaga() {
         const token: string = yield select((state) => state.auth.token)
         yield call(UserService.logout, token)
         TokenService.set(token)
-        
-        yield put(push("/"))
     } catch (e) {
 
     }finally{
